@@ -15,24 +15,19 @@ Before running this project, you need to:
 
 1. Clone this repository:
    ```
-   git clone <repository-url>
+   git clone https://github.com/aye-shadow/neural-network-acceleration.git
    cd project
    ```
 
 2. Set up a virtual environment:
    ```
-   python -m venv venv
+   python3 -m venv venv
    ```
 
-3. Activate the virtual environment:
-   - On Windows:
-     ```
-     venv\Scripts\activate
-     ```
-   - On Unix or MacOS:
-     ```
-     source venv/bin/activate
-     ```
+3. Activate the virtual environment (Linux):
+   ```
+   source venv/bin/activate
+   ```
 
 4. Install dependencies:
    ```
@@ -41,7 +36,7 @@ Before running this project, you need to:
 
 5. Download the dataset:
    ```
-   python src/extract_dataset.py
+   python3 src/extract_dataset.py
    ```
    This will download the MNIST dataset from Kaggle and extract the necessary files to the data directory.
 

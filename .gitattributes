@@ -2,3 +2,4 @@
 *.c text eol=lf
 *.txt text eol=lf
 makefile text eol=lf
+*.md text eol=lf
