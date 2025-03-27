@@ -1,0 +1,67 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls   s/call   s/call  name    
+ 61.45      7.65     7.65   190000     0.00     0.00  forward
+ 36.06     12.14     4.49   180000     0.00     0.00  backward
+  2.01     12.39     0.25        2     0.12     0.12  loadMNISTImages
+  0.32     12.43     0.04                             _init
+  0.16     12.45     0.02        1     0.02    11.76  train
+  0.00     12.45     0.00        2     0.00     0.00  loadMNISTLabels
+  0.00     12.45     0.00        1     0.00     0.00  createNetwork
+  0.00     12.45     0.00        1     0.00     0.40  evaluate
+  0.00     12.45     0.00        1     0.00     0.00  freeNetwork
+
+			Call graph
+
+
+granularity: each sample hit covers 4 byte(s) for 0.08% of 12.45 seconds
+
+index % time    self  children    called     name
+                                                 <spontaneous>
+[1]     99.7    0.00   12.41                 main [1]
+                0.02   11.74       1/1           train [2]
+                0.00    0.40       1/1           evaluate [5]
+                0.25    0.00       2/2           loadMNISTImages [6]
+                0.00    0.00       2/2           loadMNISTLabels [8]
+                0.00    0.00       1/1           createNetwork [9]
+                0.00    0.00       1/1           freeNetwork [10]
+-----------------------------------------------
+                0.02   11.74       1/1           main [1]
+[2]     94.4    0.02   11.74       1         train [2]
+                7.25    0.00  180000/190000      forward [3]
+                4.49    0.00  180000/180000      backward [4]
+-----------------------------------------------
+                0.40    0.00   10000/190000      evaluate [5]
+                7.25    0.00  180000/190000      train [2]
+[3]     61.4    7.65    0.00  190000         forward [3]
+-----------------------------------------------
+                4.49    0.00  180000/180000      train [2]
+[4]     36.1    4.49    0.00  180000         backward [4]
+-----------------------------------------------
+                0.00    0.40       1/1           main [1]
+[5]      3.2    0.00    0.40       1         evaluate [5]
+                0.40    0.00   10000/190000      forward [3]
+-----------------------------------------------
+                0.25    0.00       2/2           main [1]
+[6]      2.0    0.25    0.00       2         loadMNISTImages [6]
+-----------------------------------------------
+                                                 <spontaneous>
+[7]      0.3    0.04    0.00                 _init [7]
+-----------------------------------------------
+                0.00    0.00       2/2           main [1]
+[8]      0.0    0.00    0.00       2         loadMNISTLabels [8]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[9]      0.0    0.00    0.00       1         createNetwork [9]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[10]     0.0    0.00    0.00       1         freeNetwork [10]
+-----------------------------------------------
+
+Index by function name
+
+   [7] _init                   [5] evaluate                [6] loadMNISTImages
+   [4] backward                [3] forward                 [8] loadMNISTLabels
+   [9] createNetwork          [10] freeNetwork             [2] train
