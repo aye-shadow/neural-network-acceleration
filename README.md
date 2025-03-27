@@ -15,7 +15,7 @@ Before running this project, you need to:
 
 1. Clone this repository:
    ```
-   git clone <repository-url>
+   git clone https://github.com/aye-shadow/neural-network-acceleration
    cd project
    ```
 
