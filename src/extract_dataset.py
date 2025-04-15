@@ -5,7 +5,7 @@ import glob
 
 # Create data directory if it doesn't exist
 # Change data_dir to be one directory level up from the script location
-data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data')
+data_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'src', 'data')
 os.makedirs(data_dir, exist_ok=True)
 print("Path to dataset files (local):", data_dir)
 
