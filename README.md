@@ -16,7 +16,7 @@ Before running this project, you need to:
 1. Clone this repository:
    ```
    git clone https://github.com/aye-shadow/neural-network-acceleration.git
-   cd project
+   cd neural-network-acceleration/
    ```
 
 2. Set up a virtual environment (Linux):
