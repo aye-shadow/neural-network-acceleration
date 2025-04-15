@@ -1,26 +1,23 @@
-CC = gcc
-CFLAGS = -Wall -O2 -pg
+CC = nvcc
+CFLAGS = -O2 -arch=sm_60
 
-EXE = nn.exe
-SRC = nn.c
+EXE = nn
+SRC = nn.cu
 OBJS = nn.o
 
 all: $(EXE)
 
 $(EXE): $(OBJS)
-	$(CC) $(CFLAGS) -o $(EXE) $(OBJS) -lm
+	$(CC) $(CFLAGS) -o $(EXE) $(OBJS)
 
-%.o: %.c
+%.o: %.cu
 	$(CC) $(CFLAGS) -c $< -o $@
 
 run: $(EXE)
 	./$(EXE)
-	gprof -b $(EXE) gmon.out > profile_results.txt
 
 clean:
 	rm -f $(EXE)
 	rm -f $(OBJS)
-	rm -f gmon.out
-	rm -f profile_results.txt
 
 .PHONY: all run clean
