@@ -1,5 +1,6 @@
 /.venv
 /venv
+/cuda_test
 
 *.exe
 *.o
