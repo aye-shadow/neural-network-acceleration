@@ -3,13 +3,14 @@
 #include <math.h>
 #include <time.h>
 #include <cuda_runtime.h>
-//meow
+//meow2
 #define INPUT_SIZE 784
 #define HIDDEN_SIZE 128
 #define OUTPUT_SIZE 10
 #define LEARNING_RATE 0.01f
 #define EPOCHS 3
 #define NUM_CLASSES 10
+#define BLOCK_SIZE 256
 
 // Error checking macro for CUDA
 #define CUDA_CHECK(call) \
@@ -42,6 +43,14 @@ public:
         return ms;
     }
 };
+
+// Neural network structure (all on GPU)
+typedef struct {
+    double* d_W1;  // [HIDDEN_SIZE][INPUT_SIZE]
+    double* d_W2;  // [OUTPUT_SIZE][HIDDEN_SIZE]
+    double* d_b1;  // [HIDDEN_SIZE]
+    double* d_b2;  // [OUTPUT_SIZE]
+} GPU_NeuralNetwork;
 
 // Activation functions
 __global__ void reluKernel(double* x, int size) {
@@ -83,14 +92,6 @@ __global__ void softmaxKernel(double* x, int size) {
         x[i] /= sum;
     }
 }
-
-// Neural network structure (all on GPU)
-typedef struct {
-    double* d_W1;  // [HIDDEN_SIZE][INPUT_SIZE]
-    double* d_W2;  // [OUTPUT_SIZE][HIDDEN_SIZE]
-    double* d_b1;  // [HIDDEN_SIZE]
-    double* d_b2;  // [OUTPUT_SIZE]
-} GPU_NeuralNetwork;
 
 // Initialize neural network on GPU
 GPU_NeuralNetwork* createGPU_Network() {
@@ -285,7 +286,7 @@ void trainNetwork(GPU_NeuralNetwork* net, double* d_train_images, double* d_trai
     CUDA_CHECK(cudaMalloc((void**)&d_hidden, HIDDEN_SIZE * sizeof(double)));
     CUDA_CHECK(cudaMalloc((void**)&d_output, OUTPUT_SIZE * sizeof(double)));
     
-    dim3 blockDim(256);
+    dim3 blockDim(BLOCK_SIZE);
     dim3 gridDim(1);
     
     for (int epoch = 0; epoch < EPOCHS; epoch++) {
@@ -359,14 +360,14 @@ void evaluateNetwork(GPU_NeuralNetwork* net, double* d_test_images, double* d_te
     CUDA_CHECK(cudaMalloc((void**)&d_hidden, HIDDEN_SIZE * sizeof(double)));
     CUDA_CHECK(cudaMalloc((void**)&d_output, OUTPUT_SIZE * sizeof(double)));
     
-    dim3 blockDim(256);
+    dim3 blockDim(BLOCK_SIZE);
     dim3 gridDim(1);
     
     int correct = 0;
     
     for (int i = 0; i < num_test; i++) {
         double* current_image = d_test_images + i * INPUT_SIZE;
-        double* current_label = d_test_labels + i * OUTPUT_SIZE;
+        double* current_label = d_test_images + i * OUTPUT_SIZE;
         
         // Forward pass
         forwardPassKernel<<<gridDim, blockDim>>>(
