@@ -3,7 +3,7 @@
 #include <math.h>
 #include <time.h>
 #include <cuda_runtime.h>
-//meow2
+//meow3
 #define INPUT_SIZE 784
 #define HIDDEN_SIZE 128
 #define OUTPUT_SIZE 10
@@ -11,6 +11,7 @@
 #define EPOCHS 3
 #define NUM_CLASSES 10
 #define BLOCK_SIZE 256
+#define SMALL_CONST 1e-10f
 
 // Error checking macro for CUDA
 #define CUDA_CHECK(call) \
@@ -89,7 +90,7 @@ __global__ void softmaxKernel(double* x, int size) {
     
     // Normalize
     for (int i = threadIdx.x; i < size; i += blockDim.x) {
-        x[i] /= sum;
+        x[i] /= (sum + SMALL_CONST);  // Add small constant to avoid division by zero
     }
 }
 
@@ -111,10 +112,10 @@ GPU_NeuralNetwork* createGPU_Network() {
     
     srand(time(NULL));
     for (int i = 0; i < HIDDEN_SIZE * INPUT_SIZE; i++) {
-        h_W1[i] = ((double)rand() / RAND_MAX) * 0.01;
+        h_W1[i] = ((double)rand() / RAND_MAX - 0.5) * sqrt(2.0 / INPUT_SIZE);  // Xavier initialization
     }
     for (int i = 0; i < OUTPUT_SIZE * HIDDEN_SIZE; i++) {
-        h_W2[i] = ((double)rand() / RAND_MAX) * 0.01;
+        h_W2[i] = ((double)rand() / RAND_MAX - 0.5) * sqrt(2.0 / HIDDEN_SIZE);  // Xavier initialization
     }
     
     // Copy to device
@@ -328,7 +329,9 @@ void trainNetwork(GPU_NeuralNetwork* net, double* d_train_images, double* d_trai
             CUDA_CHECK(cudaMemcpy(h_label, current_label, OUTPUT_SIZE * sizeof(double), cudaMemcpyDeviceToHost));
             
             for (int k = 0; k < OUTPUT_SIZE; k++) {
-                loss -= h_label[k] * log(h_output[k] + 1e-10); // Add small value to avoid log(0)
+                if (h_label[k] > 0.5) {  // Only consider the true label
+                    loss -= h_label[k] * log(h_output[k] + SMALL_CONST);
+                }
             }
             
             int pred = 0, actual = 0;
@@ -367,7 +370,7 @@ void evaluateNetwork(GPU_NeuralNetwork* net, double* d_test_images, double* d_te
     
     for (int i = 0; i < num_test; i++) {
         double* current_image = d_test_images + i * INPUT_SIZE;
-        double* current_label = d_test_images + i * OUTPUT_SIZE;
+        double* current_label = d_test_labels + i * OUTPUT_SIZE;
         
         // Forward pass
         forwardPassKernel<<<gridDim, blockDim>>>(
