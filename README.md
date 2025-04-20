@@ -54,8 +54,8 @@ Before running this project, you need to:
 
 ## Usage
 
-For detailed usage instructions, refer to the README files inside each v{x} folder in the src directory:
-- src/v1/README.md - Version 1 implementation details
-- src/v2/README.md - Version 2 implementation details
-
-These README files contain version-specific instructions, optimizations, and implementation details.
+For detailed usage instructions and implementation details, refer to the README files inside each v{x} folder in the src directory:
+- src/v1/README.md - Version 1 (CPU) 
+- src/v2/README.md - Version 2 (Naive GPU)
+- src/v3/README.md - Version 3 (Optimized GPU)
+- src/v3/README.md - Version 4 (Tensor Cores Utilization)

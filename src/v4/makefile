@@ -1,5 +1,5 @@
 CC = nvcc
-CFLAGS = -O2 -arch=sm_60 -pg
+CFLAGS = -O3 -lcublas -pg
 
 EXE = nn
 SRC = nn.cu
