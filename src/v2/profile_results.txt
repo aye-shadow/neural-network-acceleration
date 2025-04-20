@@ -1,0 +1,178 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls  ms/call  ms/call  name    
+ 30.43      0.21     0.21        2   105.00   105.00  loadMNISTImages(char const*, int)
+ 24.64      0.38     0.17        1   170.00   189.47  trainGPU(NeuralNetwork*, NeuralNetworkGPU*, double**, double**, int)
+  8.70      0.44     0.06                             cudaMemcpy
+  5.80      0.48     0.04                             __cudart513
+  4.35      0.51     0.03                             __cudart545
+  4.35      0.54     0.03                             __cudart798
+  4.35      0.57     0.03                             cudaGetLastError
+  2.90      0.59     0.02                             __cudart610
+  2.90      0.61     0.02                             _init
+  1.45      0.62     0.01   190000     0.00     0.00  forwardGPU(NeuralNetworkGPU*, double*, double*, double*)
+  1.45      0.63     0.01   180000     0.00     0.00  backwardGPU(NeuralNetworkGPU*, double*, double*, double*, double*)
+  1.45      0.64     0.01                             __cudaPopCallConfiguration
+  1.45      0.65     0.01                             __cudart475
+  1.45      0.66     0.01                             __cudart556
+  1.45      0.67     0.01                             __cudart773
+  1.45      0.68     0.01                             cudaFree
+  1.45      0.69     0.01                             cudaLaunchKernel
+  0.00      0.69     0.00   190000     0.00     0.00  __device_stub__Z13softmaxKernelPdi(double*, int)
+  0.00      0.69     0.00   190000     0.00     0.00  __device_stub__Z19forwardHiddenKernelPdS_S_S_ii(double*, double*, double*, double*, int, int)
+  0.00      0.69     0.00   190000     0.00     0.00  __device_stub__Z19forwardOutputKernelPdS_S_S_ii(double*, double*, double*, double*, int, int)
+  0.00      0.69     0.00   180000     0.00     0.00  __device_stub__Z20outputGradientKernelPdS_S_i(double*, double*, double*, int)
+  0.00      0.69     0.00   180000     0.00     0.00  __device_stub__Z20hiddenGradientKernelPdS_S_S_ii(double*, double*, double*, double*, int, int)
+  0.00      0.69     0.00   180000     0.00     0.00  __device_stub__Z25updateHiddenWeightsKernelPdS_S_S_dii(double*, double*, double*, double*, double, int, int)
+  0.00      0.69     0.00   180000     0.00     0.00  __device_stub__Z25updateOutputWeightsKernelPdS_S_S_dii(double*, double*, double*, double*, double, int, int)
+  0.00      0.69     0.00        4     0.00     0.00  freeMatrix(double**, int)
+  0.00      0.69     0.00        2     0.00     0.00  loadMNISTLabels(char const*, int)
+  0.00      0.69     0.00        1     0.00     0.53  evaluateGPU(NeuralNetworkGPU*, double**, double**, int)
+  0.00      0.69     0.00        1     0.00     0.00  freeNetwork(NeuralNetwork*)
+  0.00      0.69     0.00        1     0.00     0.00  createNetwork()
+  0.00      0.69     0.00        1     0.00     0.00  freeNetworkGPU(NeuralNetworkGPU*)
+  0.00      0.69     0.00        1     0.00     0.00  transferNetworkToCPU(NeuralNetworkGPU*, NeuralNetwork*)
+  0.00      0.69     0.00        1     0.00     0.00  transferNetworkToGPU(NeuralNetwork*)
+
+			Call graph
+
+
+granularity: each sample hit covers 4 byte(s) for 1.45% of 0.69 seconds
+
+index % time    self  children    called     name
+                                                 <spontaneous>
+[1]     58.0    0.00    0.40                 main [1]
+                0.21    0.00       2/2           loadMNISTImages(char const*, int) [2]
+                0.17    0.02       1/1           trainGPU(NeuralNetwork*, NeuralNetworkGPU*, double**, double**, int) [3]
+                0.00    0.00       1/1           evaluateGPU(NeuralNetworkGPU*, double**, double**, int) [19]
+                0.00    0.00       4/4           freeMatrix(double**, int) [407]
+                0.00    0.00       2/2           loadMNISTLabels(char const*, int) [408]
+                0.00    0.00       1/1           createNetwork() [410]
+                0.00    0.00       1/1           transferNetworkToGPU(NeuralNetwork*) [413]
+                0.00    0.00       1/1           freeNetwork(NeuralNetwork*) [409]
+                0.00    0.00       1/1           freeNetworkGPU(NeuralNetworkGPU*) [411]
+-----------------------------------------------
+                0.21    0.00       2/2           main [1]
+[2]     30.4    0.21    0.00       2         loadMNISTImages(char const*, int) [2]
+-----------------------------------------------
+                0.17    0.02       1/1           main [1]
+[3]     27.5    0.17    0.02       1         trainGPU(NeuralNetwork*, NeuralNetworkGPU*, double**, double**, int) [3]
+                0.01    0.00  180000/180000      backwardGPU(NeuralNetworkGPU*, double*, double*, double*, double*) [14]
+                0.01    0.00  180000/190000      forwardGPU(NeuralNetworkGPU*, double*, double*, double*) [13]
+                0.00    0.00       1/1           transferNetworkToCPU(NeuralNetworkGPU*, NeuralNetwork*) [412]
+-----------------------------------------------
+                                                 <spontaneous>
+[4]      8.7    0.06    0.00                 cudaMemcpy [4]
+-----------------------------------------------
+                                                 <spontaneous>
+[5]      5.8    0.04    0.00                 __cudart513 [5]
+-----------------------------------------------
+                                                 <spontaneous>
+[6]      4.3    0.03    0.00                 cudaGetLastError [6]
+-----------------------------------------------
+                                                 <spontaneous>
+[7]      4.3    0.03    0.00                 __cudart545 [7]
+-----------------------------------------------
+                                                 <spontaneous>
+[8]      4.3    0.03    0.00                 __cudart798 [8]
+-----------------------------------------------
+                                                 <spontaneous>
+[9]      2.9    0.02    0.00                 __cudart610 [9]
+-----------------------------------------------
+                                                 <spontaneous>
+[10]     2.9    0.02    0.00                 _init [10]
+-----------------------------------------------
+                                                 <spontaneous>
+[11]     1.4    0.01    0.00                 cudaFree [11]
+-----------------------------------------------
+                                                 <spontaneous>
+[12]     1.4    0.01    0.00                 cudaLaunchKernel [12]
+-----------------------------------------------
+                0.00    0.00   10000/190000      evaluateGPU(NeuralNetworkGPU*, double**, double**, int) [19]
+                0.01    0.00  180000/190000      trainGPU(NeuralNetwork*, NeuralNetworkGPU*, double**, double**, int) [3]
+[13]     1.4    0.01    0.00  190000         forwardGPU(NeuralNetworkGPU*, double*, double*, double*) [13]
+                0.00    0.00  190000/190000      __device_stub__Z19forwardHiddenKernelPdS_S_S_ii(double*, double*, double*, double*, int, int) [401]
+                0.00    0.00  190000/190000      __device_stub__Z19forwardOutputKernelPdS_S_S_ii(double*, double*, double*, double*, int, int) [402]
+                0.00    0.00  190000/190000      __device_stub__Z13softmaxKernelPdi(double*, int) [400]
+-----------------------------------------------
+                0.01    0.00  180000/180000      trainGPU(NeuralNetwork*, NeuralNetworkGPU*, double**, double**, int) [3]
+[14]     1.4    0.01    0.00  180000         backwardGPU(NeuralNetworkGPU*, double*, double*, double*, double*) [14]
+                0.00    0.00  180000/180000      __device_stub__Z20outputGradientKernelPdS_S_i(double*, double*, double*, int) [403]
+                0.00    0.00  180000/180000      __device_stub__Z20hiddenGradientKernelPdS_S_S_ii(double*, double*, double*, double*, int, int) [404]
+                0.00    0.00  180000/180000      __device_stub__Z25updateOutputWeightsKernelPdS_S_S_dii(double*, double*, double*, double*, double, int, int) [406]
+                0.00    0.00  180000/180000      __device_stub__Z25updateHiddenWeightsKernelPdS_S_S_dii(double*, double*, double*, double*, double, int, int) [405]
+-----------------------------------------------
+                                                 <spontaneous>
+[15]     1.4    0.01    0.00                 __cudaPopCallConfiguration [15]
+-----------------------------------------------
+                                                 <spontaneous>
+[16]     1.4    0.01    0.00                 __cudart475 [16]
+-----------------------------------------------
+                                                 <spontaneous>
+[17]     1.4    0.01    0.00                 __cudart556 [17]
+-----------------------------------------------
+                                                 <spontaneous>
+[18]     1.4    0.01    0.00                 __cudart773 [18]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[19]     0.1    0.00    0.00       1         evaluateGPU(NeuralNetworkGPU*, double**, double**, int) [19]
+                0.00    0.00   10000/190000      forwardGPU(NeuralNetworkGPU*, double*, double*, double*) [13]
+-----------------------------------------------
+                0.00    0.00  190000/190000      forwardGPU(NeuralNetworkGPU*, double*, double*, double*) [13]
+[400]    0.0    0.00    0.00  190000         __device_stub__Z13softmaxKernelPdi(double*, int) [400]
+-----------------------------------------------
+                0.00    0.00  190000/190000      forwardGPU(NeuralNetworkGPU*, double*, double*, double*) [13]
+[401]    0.0    0.00    0.00  190000         __device_stub__Z19forwardHiddenKernelPdS_S_S_ii(double*, double*, double*, double*, int, int) [401]
+-----------------------------------------------
+                0.00    0.00  190000/190000      forwardGPU(NeuralNetworkGPU*, double*, double*, double*) [13]
+[402]    0.0    0.00    0.00  190000         __device_stub__Z19forwardOutputKernelPdS_S_S_ii(double*, double*, double*, double*, int, int) [402]
+-----------------------------------------------
+                0.00    0.00  180000/180000      backwardGPU(NeuralNetworkGPU*, double*, double*, double*, double*) [14]
+[403]    0.0    0.00    0.00  180000         __device_stub__Z20outputGradientKernelPdS_S_i(double*, double*, double*, int) [403]
+-----------------------------------------------
+                0.00    0.00  180000/180000      backwardGPU(NeuralNetworkGPU*, double*, double*, double*, double*) [14]
+[404]    0.0    0.00    0.00  180000         __device_stub__Z20hiddenGradientKernelPdS_S_S_ii(double*, double*, double*, double*, int, int) [404]
+-----------------------------------------------
+                0.00    0.00  180000/180000      backwardGPU(NeuralNetworkGPU*, double*, double*, double*, double*) [14]
+[405]    0.0    0.00    0.00  180000         __device_stub__Z25updateHiddenWeightsKernelPdS_S_S_dii(double*, double*, double*, double*, double, int, int) [405]
+-----------------------------------------------
+                0.00    0.00  180000/180000      backwardGPU(NeuralNetworkGPU*, double*, double*, double*, double*) [14]
+[406]    0.0    0.00    0.00  180000         __device_stub__Z25updateOutputWeightsKernelPdS_S_S_dii(double*, double*, double*, double*, double, int, int) [406]
+-----------------------------------------------
+                0.00    0.00       4/4           main [1]
+[407]    0.0    0.00    0.00       4         freeMatrix(double**, int) [407]
+-----------------------------------------------
+                0.00    0.00       2/2           main [1]
+[408]    0.0    0.00    0.00       2         loadMNISTLabels(char const*, int) [408]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[409]    0.0    0.00    0.00       1         freeNetwork(NeuralNetwork*) [409]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[410]    0.0    0.00    0.00       1         createNetwork() [410]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[411]    0.0    0.00    0.00       1         freeNetworkGPU(NeuralNetworkGPU*) [411]
+-----------------------------------------------
+                0.00    0.00       1/1           trainGPU(NeuralNetwork*, NeuralNetworkGPU*, double**, double**, int) [3]
+[412]    0.0    0.00    0.00       1         transferNetworkToCPU(NeuralNetworkGPU*, NeuralNetwork*) [412]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[413]    0.0    0.00    0.00       1         transferNetworkToGPU(NeuralNetwork*) [413]
+-----------------------------------------------
+
+Index by function name
+
+  [13] forwardGPU(NeuralNetworkGPU*, double*, double*, double*) [400] __device_stub__Z13softmaxKernelPdi(double*, int) [7] __cudart545
+ [407] freeMatrix(double**, int) [403] __device_stub__Z20outputGradientKernelPdS_S_i(double*, double*, double*, int) [17] __cudart556
+  [14] backwardGPU(NeuralNetworkGPU*, double*, double*, double*, double*) [401] __device_stub__Z19forwardHiddenKernelPdS_S_S_ii(double*, double*, double*, double*, int, int) [9] __cudart610
+  [19] evaluateGPU(NeuralNetworkGPU*, double**, double**, int) [402] __device_stub__Z19forwardOutputKernelPdS_S_S_ii(double*, double*, double*, double*, int, int) [18] __cudart773
+ [409] freeNetwork(NeuralNetwork*) [404] __device_stub__Z20hiddenGradientKernelPdS_S_S_ii(double*, double*, double*, double*, int, int) [8] __cudart798
+ [410] createNetwork()       [405] __device_stub__Z25updateHiddenWeightsKernelPdS_S_S_dii(double*, double*, double*, double*, double, int, int) [10] _init
+ [411] freeNetworkGPU(NeuralNetworkGPU*) [406] __device_stub__Z25updateOutputWeightsKernelPdS_S_S_dii(double*, double*, double*, double*, double, int, int) [11] cudaFree
+   [2] loadMNISTImages(char const*, int) [3] trainGPU(NeuralNetwork*, NeuralNetworkGPU*, double**, double**, int) [6] cudaGetLastError
+ [408] loadMNISTLabels(char const*, int) [15] __cudaPopCallConfiguration [12] cudaLaunchKernel
+ [412] transferNetworkToCPU(NeuralNetworkGPU*, NeuralNetwork*) [16] __cudart475 [4] cudaMemcpy
+ [413] transferNetworkToGPU(NeuralNetwork*) [5] __cudart513

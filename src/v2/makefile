@@ -1,5 +1,5 @@
 CC = nvcc
-CFLAGS = -O2 -arch=sm_60 -rdc=true
+CFLAGS = -O2 -arch=sm_60 -pg
 
 EXE = nn
 SRC = nn.cu
@@ -15,9 +15,12 @@ $(EXE): $(OBJS)
 
 run: $(EXE)
 	./$(EXE)
+	gprof -b $(EXE) gmon.out > profile_results.txt
 
 clean:
 	rm -f $(EXE)
 	rm -f $(OBJS)
+	rm -f gmon.out
+	rm -f profile_results.txt
 
 .PHONY: all run clean
