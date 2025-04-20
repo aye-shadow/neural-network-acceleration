@@ -325,18 +325,27 @@ void backwardGPU(NeuralNetworkGPU* net,
 
 // Training function with FP16 inputs
 void trainGPU(NeuralNetwork* cpuNet, NeuralNetworkGPU* gpuNet, float** images, float** labels, int numImages) {
+    // Create multiple streams
+    cudaStream_t stream1, stream2;
+    cudaStreamCreate(&stream1);
+    cudaStreamCreate(&stream2);
+    
+    // Double buffer your inputs
+    half *d_input[2];
+    float *d_hidden[2], *d_output[2], *d_target[2];
+    for (int i = 0; i < 2; i++) {
+        cudaMalloc(&d_input[i], INPUT_SIZE * sizeof(half));
+        cudaMalloc((void**)&d_hidden[i], HIDDEN_SIZE * sizeof(float));
+        cudaMalloc((void**)&d_output[i], OUTPUT_SIZE * sizeof(float));
+        cudaMalloc((void**)&d_target[i], OUTPUT_SIZE * sizeof(float));
+    }
+
     clock_t total_start = clock();
 
-    half *d_input;
-    float *d_hidden, *d_output, *d_target;
-    
-    CHECK_CUDA_ERROR(cudaMalloc((void**)&d_input, INPUT_SIZE * sizeof(half)));
-    CHECK_CUDA_ERROR(cudaMalloc((void**)&d_hidden, HIDDEN_SIZE * sizeof(float)));
-    CHECK_CUDA_ERROR(cudaMalloc((void**)&d_output, OUTPUT_SIZE * sizeof(float)));
-    CHECK_CUDA_ERROR(cudaMalloc((void**)&d_target, OUTPUT_SIZE * sizeof(float)));
-
     float* h_output = (float*)malloc(OUTPUT_SIZE * sizeof(float));
-    half* h_input_half = (half*)malloc(INPUT_SIZE * sizeof(half));
+    half* h_input_half[2];
+    h_input_half[0] = (half*)malloc(INPUT_SIZE * sizeof(half));
+    h_input_half[1] = (half*)malloc(INPUT_SIZE * sizeof(half));
 
     for (int epoch = 0; epoch < EPOCHS; epoch++) {
         clock_t epoch_start = clock();
@@ -344,45 +353,58 @@ void trainGPU(NeuralNetwork* cpuNet, NeuralNetworkGPU* gpuNet, float** images, f
         int correct = 0;
 
         for (int i = 0; i < numImages; i++) {
-            // Convert input to FP16
-            for (int j = 0; j < INPUT_SIZE; j++) {
-                h_input_half[j] = __float2half(images[i][j]);
+            int buf_idx = i % 2;
+            int next_buf = (i+1) % 2;
+            
+            // Convert and transfer next input while processing current
+            if (i+1 < numImages) {
+                #pragma omp parallel for
+                for (int j = 0; j < INPUT_SIZE; j++) {
+                    h_input_half[next_buf][j] = __float2half(images[i+1][j]);
+                }
+                cudaMemcpyAsync(d_input[next_buf], h_input_half[next_buf], 
+                                INPUT_SIZE * sizeof(half), cudaMemcpyHostToDevice, stream2);
+                CHECK_CUDA_ERROR(cudaMemcpyAsync(d_target[buf_idx], labels[i], OUTPUT_SIZE * sizeof(float), 
+                                cudaMemcpyHostToDevice, stream1));
+ 
+                forwardGPU(gpuNet, d_input[buf_idx], d_hidden[buf_idx], d_output[buf_idx]);
+                backwardGPU(gpuNet, d_input[buf_idx], d_hidden[buf_idx], d_output[buf_idx], d_target[buf_idx]);
+                
+                CHECK_CUDA_ERROR(cudaMemcpyAsync(h_output, d_output[buf_idx], OUTPUT_SIZE * sizeof(float), 
+                                cudaMemcpyDeviceToHost, stream1));
+                
+                // Calculate loss and accuracy
+                for (int k = 0; k < OUTPUT_SIZE; k++) {
+                    loss -= labels[i][k] * log(h_output[k] > 1e-10 ? h_output[k] : 1e-10);
+                }
+                
+                int pred = 0, actual = 0;
+                for (int j = 0; j < OUTPUT_SIZE; j++) {
+                    if (h_output[j] > h_output[pred]) pred = j;
+                    if (labels[i][j] > labels[i][actual]) actual = j;
+                }
+                if (pred == actual) correct++;
+
+                cudaStreamSynchronize(stream1);
             }
-            
-            CHECK_CUDA_ERROR(cudaMemcpy(d_input, h_input_half, INPUT_SIZE * sizeof(half), cudaMemcpyHostToDevice));
-            CHECK_CUDA_ERROR(cudaMemcpy(d_target, labels[i], OUTPUT_SIZE * sizeof(float), cudaMemcpyHostToDevice));
-            
-            forwardGPU(gpuNet, d_input, d_hidden, d_output);
-            backwardGPU(gpuNet, d_input, d_hidden, d_output, d_target);
-            
-            CHECK_CUDA_ERROR(cudaMemcpy(h_output, d_output, OUTPUT_SIZE * sizeof(float), cudaMemcpyDeviceToHost));
-            
-            // Calculate loss and accuracy
-            for (int k = 0; k < OUTPUT_SIZE; k++) {
-                loss -= labels[i][k] * log(h_output[k] > 1e-10 ? h_output[k] : 1e-10);
-            }
-            
-            int pred = 0, actual = 0;
-            for (int j = 0; j < OUTPUT_SIZE; j++) {
-                if (h_output[j] > h_output[pred]) pred = j;
-                if (labels[i][j] > labels[i][actual]) actual = j;
-            }
-            if (pred == actual) correct++;
         }
-        
+
         printf("Epoch %d - Loss: %.4f - Train Accuracy: %.2f%% - Time: %.3fs\n",
                epoch + 1, loss / numImages, (correct / (float)numImages) * 100, get_time(epoch_start));
     }
 
     printf("Total training time: %.3fs\n", get_time(total_start));
-    
-    // Cleanup
-    CHECK_CUDA_ERROR(cudaFree(d_input));
-    CHECK_CUDA_ERROR(cudaFree(d_hidden));
-    CHECK_CUDA_ERROR(cudaFree(d_output));
-    CHECK_CUDA_ERROR(cudaFree(d_target));
+    for (int i = 0; i < 2; i++) {
+        CHECK_CUDA_ERROR(cudaFree(d_input[i]));
+        CHECK_CUDA_ERROR(cudaFree(d_hidden[i]));
+        CHECK_CUDA_ERROR(cudaFree(d_output[i]));
+        CHECK_CUDA_ERROR(cudaFree(d_target[i]));
+    }
     free(h_output);
-    free(h_input_half);
+    free(h_input_half[0]);
+    free(h_input_half[1]);
+    cudaStreamDestroy(stream1);
+    cudaStreamDestroy(stream2);
 }
 
 // Pinned-memory MNIST loading
