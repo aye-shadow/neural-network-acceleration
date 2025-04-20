@@ -1,5 +1,5 @@
 CC = nvcc
-CFLAGS = -O3 -lcublas -pg
+CFLAGS = -O3 -lcublas -pg -arch=sm_70
 
 EXE = nn
 SRC = nn.cu
@@ -8,7 +8,7 @@ OBJS = nn.o
 all: $(EXE)
 
 $(EXE): $(OBJS)
-	$(CC) $(CFLAGS) -o $(EXE) $(OBJS)
+	$(CC) $(CFLAGS) -o $(EXE) $(OBJS) 
 
 %.o: %.cu
 	$(CC) $(CFLAGS) -c $< -o $@

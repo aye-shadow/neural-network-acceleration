@@ -3,62 +3,174 @@ Flat profile:
 Each sample counts as 0.01 seconds.
   %   cumulative   self              self     total           
  time   seconds   seconds    calls  ms/call  ms/call  name    
- 69.44      0.25     0.25        1   250.00   250.00  train(Network*, float**, float**, int)
- 25.00      0.34     0.09        2    45.00    45.00  loadMNISTImages(char const*, int)
-  2.78      0.35     0.01                             __cudart644
-  2.78      0.36     0.01                             _init
-  0.00      0.36     0.00        4     0.00     0.00  free_matrix(float**, int)
-  0.00      0.36     0.00        2     0.00     0.00  loadMNISTLabels(char const*, int)
-  0.00      0.36     0.00        1     0.00     0.00  free_network(Network*)
-  0.00      0.36     0.00        1     0.00     0.00  create_network()
-  0.00      0.36     0.00        1     0.00     0.00  evaluate(Network*, float**, float**, int)
+ 62.16      0.69     0.69        1   690.00   738.95  trainGPU(NeuralNetwork*, NeuralNetworkGPU*, float**, float**, int)
+  5.41      0.75     0.06        2    30.00    30.00  loadMNISTImagesPinned(char const*, int, float**)
+  3.60      0.79     0.04                             cudaMemcpy
+  3.60      0.83     0.04                             libcudart_static_418eebf4e9b7463362b8385a31d08da131d0ea88
+  3.60      0.87     0.04                             libcudart_static_4d8b33a106dceb3c07a56e26de61f2d53bb62a68
+  2.70      0.90     0.03                             libcudart_static_e760a7280bc1af45ef561886abc194823c5edadb
+  1.80      0.92     0.02        1    20.00    21.05  evaluateGPU(NeuralNetworkGPU*, float**, float**, int)
+  1.80      0.94     0.02                             __cudaPopCallConfiguration
+  1.80      0.96     0.02                             libcudart_static_84455ef645bd64118bdb5d7187c33a7e3780ec53
+  1.80      0.98     0.02                             libcudart_static_901c335edfe2e89188fa6b8fe3e2a2194ad05bff
+  0.90      0.99     0.01   190000     0.00     0.00  forwardGPU(NeuralNetworkGPU*, __half*, float*, float*)
+  0.90      1.00     0.01   190000     0.00     0.00  __device_stub__Z29tensorCoreForwardHiddenKernelPK6__halfS1_PKfPfii(__half const*, __half const*, float const*, float*, int, int)
+  0.90      1.01     0.01   180000     0.00     0.00  backwardGPU(NeuralNetworkGPU*, __half*, float*, float*, float*)
+  0.90      1.02     0.01   180000     0.00     0.00  __device_stub__Z35tensorCoreUpdateOutputWeightsKernelP6__halfPfPKfS3_fii(__half*, float*, float const*, float const*, float, int, int)
+  0.90      1.03     0.01   180000     0.00     0.00  __device_stub__Z35tensorCoreUpdateHiddenWeightsKernelP6__halfPfPKfPKS_fii(__half*, float*, float const*, __half const*, float, int, int)
+  0.90      1.04     0.01                             _init
+  0.90      1.05     0.01                             cudaGetLastError
+  0.90      1.06     0.01                             cudaLaunchKernel
+  0.90      1.07     0.01                             libcudart_static_1ac887143a9696ff49bf391c58607c4a53d5a917
+  0.90      1.08     0.01                             libcudart_static_5887a27cefafb4cd438bdc166b0a6f874b079d4b
+  0.90      1.09     0.01                             libcudart_static_a97148a7205bbbb27b182faa5305fb66e7138b5b
+  0.90      1.10     0.01                             libcudart_static_b60ce2d80dde8c1e6fff7ce91e79df7041571f2c
+  0.90      1.11     0.01                             libcudart_static_f7178ff44af2120dbc16c0b50f46b99b78685b98
+  0.00      1.11     0.00   190000     0.00     0.00  __device_stub__Z29tensorCoreForwardOutputKernelPKfPK6__halfS0_Pfii(float const*, __half const*, float const*, float*, int, int)
+  0.00      1.11     0.00   180000     0.00     0.00  __device_stub__Z30tensorCoreOutputGradientKernelPKfS0_Pfi(float const*, float const*, float*, int)
+  0.00      1.11     0.00   180000     0.00     0.00  __device_stub__Z30tensorCoreHiddenGradientKernelPKfPK6__halfS0_Pfii(float const*, __half const*, float const*, float*, int, int)
+  0.00      1.11     0.00        4     0.00     0.00  freePinnedMatrix(float**, float*)
+  0.00      1.11     0.00        2     0.00     0.00  loadMNISTLabelsPinned(char const*, int, float**)
+  0.00      1.11     0.00        1     0.00     0.00  freeNetwork(NeuralNetwork*)
+  0.00      1.11     0.00        1     0.00     0.00  createNetwork()
+  0.00      1.11     0.00        1     0.00     0.00  freeNetworkGPU(NeuralNetworkGPU*)
+  0.00      1.11     0.00        1     0.00     0.00  transferNetworkToGPU(NeuralNetwork*)
 
 			Call graph
 
 
-granularity: each sample hit covers 4 byte(s) for 2.78% of 0.36 seconds
+granularity: each sample hit covers 4 byte(s) for 0.90% of 1.11 seconds
 
 index % time    self  children    called     name
                                                  <spontaneous>
-[1]     94.4    0.00    0.34                 main [1]
-                0.25    0.00       1/1           train(Network*, float**, float**, int) [2]
-                0.09    0.00       2/2           loadMNISTImages(char const*, int) [3]
-                0.00    0.00       4/4           free_matrix(float**, int) [390]
-                0.00    0.00       2/2           loadMNISTLabels(char const*, int) [391]
-                0.00    0.00       1/1           create_network() [393]
-                0.00    0.00       1/1           free_network(Network*) [392]
-                0.00    0.00       1/1           evaluate(Network*, float**, float**, int) [394]
+[1]     73.9    0.00    0.82                 main [1]
+                0.69    0.05       1/1           trainGPU(NeuralNetwork*, NeuralNetworkGPU*, float**, float**, int) [2]
+                0.06    0.00       2/2           loadMNISTImagesPinned(char const*, int, float**) [3]
+                0.02    0.00       1/1           evaluateGPU(NeuralNetworkGPU*, float**, float**, int) [9]
+                0.00    0.00       4/4           freePinnedMatrix(float**, float*) [1710]
+                0.00    0.00       2/2           loadMNISTLabelsPinned(char const*, int, float**) [1711]
+                0.00    0.00       1/1           createNetwork() [1713]
+                0.00    0.00       1/1           transferNetworkToGPU(NeuralNetwork*) [1715]
+                0.00    0.00       1/1           freeNetwork(NeuralNetwork*) [1712]
+                0.00    0.00       1/1           freeNetworkGPU(NeuralNetworkGPU*) [1714]
 -----------------------------------------------
-                0.25    0.00       1/1           main [1]
-[2]     69.4    0.25    0.00       1         train(Network*, float**, float**, int) [2]
+                0.69    0.05       1/1           main [1]
+[2]     66.6    0.69    0.05       1         trainGPU(NeuralNetwork*, NeuralNetworkGPU*, float**, float**, int) [2]
+                0.01    0.02  180000/180000      backwardGPU(NeuralNetworkGPU*, __half*, float*, float*, float*) [8]
+                0.01    0.01  180000/190000      forwardGPU(NeuralNetworkGPU*, __half*, float*, float*) [12]
 -----------------------------------------------
-                0.09    0.00       2/2           main [1]
-[3]     25.0    0.09    0.00       2         loadMNISTImages(char const*, int) [3]
+                0.06    0.00       2/2           main [1]
+[3]      5.4    0.06    0.00       2         loadMNISTImagesPinned(char const*, int, float**) [3]
 -----------------------------------------------
                                                  <spontaneous>
-[4]      2.8    0.01    0.00                 __cudart644 [4]
+[4]      3.6    0.04    0.00                 cudaMemcpy [4]
 -----------------------------------------------
                                                  <spontaneous>
-[5]      2.8    0.01    0.00                 _init [5]
+[5]      3.6    0.04    0.00                 libcudart_static_418eebf4e9b7463362b8385a31d08da131d0ea88 [5]
+-----------------------------------------------
+                                                 <spontaneous>
+[6]      3.6    0.04    0.00                 libcudart_static_4d8b33a106dceb3c07a56e26de61f2d53bb62a68 [6]
+-----------------------------------------------
+                                                 <spontaneous>
+[7]      2.7    0.03    0.00                 libcudart_static_e760a7280bc1af45ef561886abc194823c5edadb [7]
+-----------------------------------------------
+                0.01    0.02  180000/180000      trainGPU(NeuralNetwork*, NeuralNetworkGPU*, float**, float**, int) [2]
+[8]      2.7    0.01    0.02  180000         backwardGPU(NeuralNetworkGPU*, __half*, float*, float*, float*) [8]
+                0.01    0.00  180000/180000      __device_stub__Z35tensorCoreUpdateOutputWeightsKernelP6__halfPfPKfS3_fii(__half*, float*, float const*, float const*, float, int, int) [22]
+                0.01    0.00  180000/180000      __device_stub__Z35tensorCoreUpdateHiddenWeightsKernelP6__halfPfPKfPKS_fii(__half*, float*, float const*, __half const*, float, int, int) [23]
+                0.00    0.00  180000/180000      __device_stub__Z30tensorCoreOutputGradientKernelPKfS0_Pfi(float const*, float const*, float*, int) [1708]
+                0.00    0.00  180000/180000      __device_stub__Z30tensorCoreHiddenGradientKernelPKfPK6__halfS0_Pfii(float const*, __half const*, float const*, float*, int, int) [1709]
+-----------------------------------------------
+                0.02    0.00       1/1           main [1]
+[9]      1.9    0.02    0.00       1         evaluateGPU(NeuralNetworkGPU*, float**, float**, int) [9]
+                0.00    0.00   10000/190000      forwardGPU(NeuralNetworkGPU*, __half*, float*, float*) [12]
+-----------------------------------------------
+                                                 <spontaneous>
+[10]     1.8    0.02    0.00                 libcudart_static_84455ef645bd64118bdb5d7187c33a7e3780ec53 [10]
+-----------------------------------------------
+                                                 <spontaneous>
+[11]     1.8    0.02    0.00                 libcudart_static_901c335edfe2e89188fa6b8fe3e2a2194ad05bff [11]
+-----------------------------------------------
+                0.00    0.00   10000/190000      evaluateGPU(NeuralNetworkGPU*, float**, float**, int) [9]
+                0.01    0.01  180000/190000      trainGPU(NeuralNetwork*, NeuralNetworkGPU*, float**, float**, int) [2]
+[12]     1.8    0.01    0.01  190000         forwardGPU(NeuralNetworkGPU*, __half*, float*, float*) [12]
+                0.01    0.00  190000/190000      __device_stub__Z29tensorCoreForwardHiddenKernelPK6__halfS1_PKfPfii(__half const*, __half const*, float const*, float*, int, int) [21]
+                0.00    0.00  190000/190000      __device_stub__Z29tensorCoreForwardOutputKernelPKfPK6__halfS0_Pfii(float const*, __half const*, float const*, float*, int, int) [1707]
+-----------------------------------------------
+                                                 <spontaneous>
+[13]     1.8    0.02    0.00                 __cudaPopCallConfiguration [13]
+-----------------------------------------------
+                                                 <spontaneous>
+[14]     0.9    0.01    0.00                 cudaGetLastError [14]
+-----------------------------------------------
+                                                 <spontaneous>
+[15]     0.9    0.01    0.00                 cudaLaunchKernel [15]
+-----------------------------------------------
+                                                 <spontaneous>
+[16]     0.9    0.01    0.00                 libcudart_static_1ac887143a9696ff49bf391c58607c4a53d5a917 [16]
+-----------------------------------------------
+                                                 <spontaneous>
+[17]     0.9    0.01    0.00                 libcudart_static_5887a27cefafb4cd438bdc166b0a6f874b079d4b [17]
+-----------------------------------------------
+                                                 <spontaneous>
+[18]     0.9    0.01    0.00                 libcudart_static_a97148a7205bbbb27b182faa5305fb66e7138b5b [18]
+-----------------------------------------------
+                                                 <spontaneous>
+[19]     0.9    0.01    0.00                 libcudart_static_b60ce2d80dde8c1e6fff7ce91e79df7041571f2c [19]
+-----------------------------------------------
+                                                 <spontaneous>
+[20]     0.9    0.01    0.00                 libcudart_static_f7178ff44af2120dbc16c0b50f46b99b78685b98 [20]
+-----------------------------------------------
+                0.01    0.00  190000/190000      forwardGPU(NeuralNetworkGPU*, __half*, float*, float*) [12]
+[21]     0.9    0.01    0.00  190000         __device_stub__Z29tensorCoreForwardHiddenKernelPK6__halfS1_PKfPfii(__half const*, __half const*, float const*, float*, int, int) [21]
+-----------------------------------------------
+                0.01    0.00  180000/180000      backwardGPU(NeuralNetworkGPU*, __half*, float*, float*, float*) [8]
+[22]     0.9    0.01    0.00  180000         __device_stub__Z35tensorCoreUpdateOutputWeightsKernelP6__halfPfPKfS3_fii(__half*, float*, float const*, float const*, float, int, int) [22]
+-----------------------------------------------
+                0.01    0.00  180000/180000      backwardGPU(NeuralNetworkGPU*, __half*, float*, float*, float*) [8]
+[23]     0.9    0.01    0.00  180000         __device_stub__Z35tensorCoreUpdateHiddenWeightsKernelP6__halfPfPKfPKS_fii(__half*, float*, float const*, __half const*, float, int, int) [23]
+-----------------------------------------------
+                                                 <spontaneous>
+[24]     0.9    0.01    0.00                 _init [24]
+-----------------------------------------------
+                0.00    0.00  190000/190000      forwardGPU(NeuralNetworkGPU*, __half*, float*, float*) [12]
+[1707]   0.0    0.00    0.00  190000         __device_stub__Z29tensorCoreForwardOutputKernelPKfPK6__halfS0_Pfii(float const*, __half const*, float const*, float*, int, int) [1707]
+-----------------------------------------------
+                0.00    0.00  180000/180000      backwardGPU(NeuralNetworkGPU*, __half*, float*, float*, float*) [8]
+[1708]   0.0    0.00    0.00  180000         __device_stub__Z30tensorCoreOutputGradientKernelPKfS0_Pfi(float const*, float const*, float*, int) [1708]
+-----------------------------------------------
+                0.00    0.00  180000/180000      backwardGPU(NeuralNetworkGPU*, __half*, float*, float*, float*) [8]
+[1709]   0.0    0.00    0.00  180000         __device_stub__Z30tensorCoreHiddenGradientKernelPKfPK6__halfS0_Pfii(float const*, __half const*, float const*, float*, int, int) [1709]
 -----------------------------------------------
                 0.00    0.00       4/4           main [1]
-[390]    0.0    0.00    0.00       4         free_matrix(float**, int) [390]
+[1710]   0.0    0.00    0.00       4         freePinnedMatrix(float**, float*) [1710]
 -----------------------------------------------
                 0.00    0.00       2/2           main [1]
-[391]    0.0    0.00    0.00       2         loadMNISTLabels(char const*, int) [391]
+[1711]   0.0    0.00    0.00       2         loadMNISTLabelsPinned(char const*, int, float**) [1711]
 -----------------------------------------------
                 0.00    0.00       1/1           main [1]
-[392]    0.0    0.00    0.00       1         free_network(Network*) [392]
+[1712]   0.0    0.00    0.00       1         freeNetwork(NeuralNetwork*) [1712]
 -----------------------------------------------
                 0.00    0.00       1/1           main [1]
-[393]    0.0    0.00    0.00       1         create_network() [393]
+[1713]   0.0    0.00    0.00       1         createNetwork() [1713]
 -----------------------------------------------
                 0.00    0.00       1/1           main [1]
-[394]    0.0    0.00    0.00       1         evaluate(Network*, float**, float**, int) [394]
+[1714]   0.0    0.00    0.00       1         freeNetworkGPU(NeuralNetworkGPU*) [1714]
+-----------------------------------------------
+                0.00    0.00       1/1           main [1]
+[1715]   0.0    0.00    0.00       1         transferNetworkToGPU(NeuralNetwork*) [1715]
 -----------------------------------------------
 
 Index by function name
 
- [390] free_matrix(float**, int) [3] loadMNISTImages(char const*, int) [394] evaluate(Network*, float**, float**, int)
- [392] free_network(Network*) [391] loadMNISTLabels(char const*, int) [4] __cudart644
- [393] create_network()        [2] train(Network*, float**, float**, int) [5] _init
+  [12] forwardGPU(NeuralNetworkGPU*, __half*, float*, float*) [21] __device_stub__Z29tensorCoreForwardHiddenKernelPK6__halfS1_PKfPfii(__half const*, __half const*, float const*, float*, int, int) [16] libcudart_static_1ac887143a9696ff49bf391c58607c4a53d5a917
+   [8] backwardGPU(NeuralNetworkGPU*, __half*, float*, float*, float*) [1707] __device_stub__Z29tensorCoreForwardOutputKernelPKfPK6__halfS0_Pfii(float const*, __half const*, float const*, float*, int, int) [5] libcudart_static_418eebf4e9b7463362b8385a31d08da131d0ea88
+   [9] evaluateGPU(NeuralNetworkGPU*, float**, float**, int) [1709] __device_stub__Z30tensorCoreHiddenGradientKernelPKfPK6__halfS0_Pfii(float const*, __half const*, float const*, float*, int, int) [6] libcudart_static_4d8b33a106dceb3c07a56e26de61f2d53bb62a68
+ [1712] freeNetwork(NeuralNetwork*) [22] __device_stub__Z35tensorCoreUpdateOutputWeightsKernelP6__halfPfPKfS3_fii(__half*, float*, float const*, float const*, float, int, int) [17] libcudart_static_5887a27cefafb4cd438bdc166b0a6f874b079d4b
+ [1713] createNetwork()       [23] __device_stub__Z35tensorCoreUpdateHiddenWeightsKernelP6__halfPfPKfPKS_fii(__half*, float*, float const*, __half const*, float, int, int) [10] libcudart_static_84455ef645bd64118bdb5d7187c33a7e3780ec53
+ [1714] freeNetworkGPU(NeuralNetworkGPU*) [2] trainGPU(NeuralNetwork*, NeuralNetworkGPU*, float**, float**, int) [11] libcudart_static_901c335edfe2e89188fa6b8fe3e2a2194ad05bff
+ [1710] freePinnedMatrix(float**, float*) [13] __cudaPopCallConfiguration [18] libcudart_static_a97148a7205bbbb27b182faa5305fb66e7138b5b
+ [1715] transferNetworkToGPU(NeuralNetwork*) [24] _init   [19] libcudart_static_b60ce2d80dde8c1e6fff7ce91e79df7041571f2c
+   [3] loadMNISTImagesPinned(char const*, int, float**) [14] cudaGetLastError [7] libcudart_static_e760a7280bc1af45ef561886abc194823c5edadb
+ [1711] loadMNISTLabelsPinned(char const*, int, float**) [15] cudaLaunchKernel [20] libcudart_static_f7178ff44af2120dbc16c0b50f46b99b78685b98
+ [1708] __device_stub__Z30tensorCoreOutputGradientKernelPKfS0_Pfi(float const*, float const*, float*, int) [4] cudaMemcpy
